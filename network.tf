@@ -61,64 +61,6 @@ resource "oci_core_route_table" "RouteTableViaNAT" {
   }
 }
 
-# Security List for HTTP/HTTPS
-resource "oci_core_security_list" "WebSecurityList" { # definir el recurso de la lista de seguridad
-  compartment_id = oci_identity_compartment.Prod_01.id # definir el OCID del compartimento
-  display_name   = "WebSecurityList" # definir el nombre de la lista de seguridad
-  vcn_id         = oci_core_virtual_network.VCN_Prod_01.id # definir el OCID de la VCN
-
-  egress_security_rules { # definir las reglas de seguridad de salida
-    protocol    = "6" # definir el protocolo
-    destination = "0.0.0.0/0" # definir el destino
-  }
-
-  dynamic "ingress_security_rules" { # definir las reglas de seguridad de entrada
-    for_each = var.webservice_ports # definir si la forma de la instancia es flexible o no lo es
-    content { # definir el contenido de las reglas de seguridad de entrada
-      protocol = "6" # definir el protocolo
-      source   = "0.0.0.0/0" # definir la fuente
-      tcp_options {
-        max = ingress_security_rules.value # definir el máximo
-        min = ingress_security_rules.value # definir el mínimo
-      }
-    }
-  }
-
-  ingress_security_rules { # definir las reglas de seguridad de entrada
-    protocol = "6" # definir el protocolo
-    source   = var.VCN-CIDR # definir la fuente
-  }
-}
-
-# Security List for SSH
-resource "oci_core_security_list" "SSHSecurityList" {
-  compartment_id = oci_identity_compartment.Prod_01.id
-  display_name   = "SSHSecurityList"
-  vcn_id         = oci_core_virtual_network.VCN_Prod_01.id
-
-  egress_security_rules {
-    protocol    = "6"
-    destination = "0.0.0.0/0"
-  }
-
-  dynamic "ingress_security_rules" {
-    for_each = var.bastion_ports
-    content {
-      protocol = "6"
-      source   = "0.0.0.0/0"
-      tcp_options {
-        max = ingress_security_rules.value
-        min = ingress_security_rules.value
-      }
-    }
-  }
-
-  ingress_security_rules {
-    protocol = "6"
-    source   = var.VCN-CIDR
-  }
-}
-
 # WebSubnet (private)
 resource "oci_core_subnet" "WebSubnet" { # definir el recurso de la subred
   cidr_block        = var.WebSubnet-CIDR # definir el bloque CIDR de la subred
