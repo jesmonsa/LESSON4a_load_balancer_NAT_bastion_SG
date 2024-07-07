@@ -23,6 +23,7 @@ resource "oci_core_instance" "BastionServer" {
   create_vnic_details {
     subnet_id        = oci_core_subnet.BastionSubnet.id
     assign_public_ip = true
+    nsg_ids          = [oci_core_network_security_group.SSHSecurityGroup.id]
   }
 }
 
@@ -54,7 +55,8 @@ resource "oci_core_instance" "Webserver1" { # definir el recurso de la instancia
   # WebServer VNIC
   create_vnic_details { # definir los detalles de la creación de la VNIC
     subnet_id       = oci_core_subnet.WebSubnet.id # definir el OCID de la subred
-    assign_public_ip = false 
+    assign_public_ip = false
+    nsg_ids          = [oci_core_network_security_group.WebSecurityGroup.id, oci_core_network_security_group.SSHSecurityGroup.id] 
   }
 }
 
@@ -88,5 +90,6 @@ resource "oci_core_instance" "Webserver2" { # definir el recurso de la instancia
   create_vnic_details { # definir los detalles de la creación de la VNIC
     subnet_id       = oci_core_subnet.WebSubnet.id # definir el OCID de la subred
     assign_public_ip = false
+    nsg_ids          = [oci_core_network_security_group.WebSecurityGroup.id, oci_core_network_security_group.SSHSecurityGroup.id]
   }
 }
