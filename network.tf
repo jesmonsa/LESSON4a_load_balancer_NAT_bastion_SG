@@ -70,7 +70,6 @@ resource "oci_core_subnet" "WebSubnet" { # definir el recurso de la subred
   vcn_id            = oci_core_virtual_network.VCN_Prod_01.id # definir el OCID de la VCN
   route_table_id    = oci_core_route_table.RouteTableViaNAT.id # definir el OCID de la tabla de rutas
   dhcp_options_id   = oci_core_dhcp_options.DhcpOptions1.id # definir el OCID de las opciones DHCP
-  security_list_ids = [oci_core_security_list.WebSecurityList.id] # definir el OCID de la lista de seguridad
   prohibit_public_ip_on_vnic = true
 }
 
@@ -83,7 +82,7 @@ resource "oci_core_subnet" "LBSubnet" {
   vcn_id            = oci_core_virtual_network.VCN_Prod_01.id
   route_table_id    = oci_core_route_table.RouteTableViaIGW.id
   dhcp_options_id   = oci_core_dhcp_options.DhcpOptions1.id
-  security_list_ids = [oci_core_security_list.WebSecurityList.id]
+  
 }
 
 # Bastion Subnet (public)
@@ -95,5 +94,5 @@ resource "oci_core_subnet" "BastionSubnet" {
   vcn_id            = oci_core_virtual_network.VCN_Prod_01.id
   route_table_id    = oci_core_route_table.RouteTableViaIGW.id
   dhcp_options_id   = oci_core_dhcp_options.DhcpOptions1.id
-  security_list_ids = [oci_core_security_list.SSHSecurityList.id]
+  
 }
