@@ -15,6 +15,7 @@ resource "oci_load_balancer" "PublicLoadBalancer" {
     oci_core_subnet.LBSubnet.id
   ]
   display_name = "PublicLoadBalancer"
+  network_security_group_ids = [oci_core_network_security_group.WebSecurityGroup.id]
 }
 
 # LoadBalancer Listener
