@@ -16,7 +16,7 @@ resource "oci_core_network_security_group_security_rule" "WebSecurityEgressGroup
 
 # Web NSG Ingress Rules
 resource "oci_core_network_security_group_security_rule" "WebSecurityIngressGroupRules" {
-  for_each = toset(var.webservice_ports)
+    for_each = toset([for port in var.webservice_ports : tostring(port)])
 
   network_security_group_id = oci_core_network_security_group.WebSecurityGroup.id
   direction                 = "INGRESS"
@@ -49,7 +49,7 @@ resource "oci_core_network_security_group_security_rule" "SSHSecurityEgressGroup
 
 # SSH NSG Ingress Rules
 resource "oci_core_network_security_group_security_rule" "SSHSecurityIngressGroupRules" {
-  for_each = toset(var.bastion_ports)
+    for_each = toset([for port in var.bastion_ports : tostring(port)])
 
   network_security_group_id = oci_core_network_security_group.SSHSecurityGroup.id
   direction                 = "INGRESS"
